@@ -31,6 +31,11 @@ const ClubDashboard = () => {
     setShowBookingForm(true);
   };
 
+  const handleBookingSubmit = () => {
+    setShowBookingForm(false);
+    refreshData();
+  };
+
   const refreshData = () => setRefreshTrigger((prev) => prev + 1);
 
   return (
@@ -41,7 +46,7 @@ const ClubDashboard = () => {
       <Button variant="contained" color="primary" onClick={handleOpenBookingForm} style={{ marginBottom: '20px' }}>
         Book a Room
       </Button>
-      {showBookingForm && <RoomBookingForm onBookingSubmit={refreshData}/>}
+      {showBookingForm && <RoomBookingForm onBookingSubmit={handleBookingSubmit}/>}
       {requests.length > 0 ? (
         <Table>
           <TableHead>
