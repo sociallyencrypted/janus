@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { db } from "../firebase";
-import { collection, getDocs, updateDoc, doc, onSnapshot } from "firebase/firestore";
+import { collection, updateDoc, doc, onSnapshot } from "firebase/firestore";
+import rooms from "../rooms.json";
 
 const AdminDashboard = () => {
   const [requests, setRequests] = useState([]);
@@ -28,6 +29,7 @@ const AdminDashboard = () => {
         <TableRow>
           <TableCell>Room</TableCell>
           <TableCell>Event Title</TableCell>
+          <TableCell>Event Description</TableCell>
           <TableCell>Date</TableCell>
           <TableCell>Time</TableCell>
           <TableCell>Status</TableCell>
@@ -37,11 +39,21 @@ const AdminDashboard = () => {
       <TableBody>
         {requests.map((request) => (
           <TableRow key={request.id}>
-            <TableCell>{request.room}</TableCell>
-            <TableCell>{request.eventTitle}</TableCell>
-            <TableCell>{request.selectedDate}</TableCell>
-            <TableCell>{request.selectedTime}</TableCell>
-            <TableCell>{request.status || "Pending"}</TableCell>
+                <TableCell>{rooms.find(room => room.id === request.room)?.name || request.room}</TableCell>
+                <TableCell>{request.eventTitle}</TableCell>
+                <TableCell>
+                  <div style={{ 
+                    maxHeight: '100px', 
+                    wordWrap: 'break-word',
+                    width: '200px',
+                    whiteSpace: 'normal'
+                  }}>
+                    {request.eventDescription}
+                  </div>
+                </TableCell>
+                <TableCell>{new Date(request.startDateTime.seconds * 1000).toLocaleString()}</TableCell>
+                <TableCell>{new Date(request.endDateTime.seconds * 1000).toLocaleString()}</TableCell>
+                <TableCell>{request.status || "Pending"}</TableCell>
             <TableCell>
               <Button
                 variant="contained"
