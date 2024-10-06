@@ -8,6 +8,7 @@ import RoomBookingForm from "./RoomBookingForm";
 const ClubDashboard = () => {
   const [requests, setRequests] = useState([]);
   const [showBookingForm, setShowBookingForm] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -19,11 +20,17 @@ const ClubDashboard = () => {
       }
     };
     fetchRequests();
+  }, [refreshTrigger]);
+
+  useEffect(() => {
+    refreshData();
   }, []);
 
   const handleOpenBookingForm = () => {
     setShowBookingForm(true);
   };
+
+  const refreshData = () => setRefreshTrigger((prev) => prev + 1);
 
   return (
     <Container>
@@ -33,15 +40,16 @@ const ClubDashboard = () => {
       <Button variant="contained" color="primary" onClick={handleOpenBookingForm} style={{ marginBottom: '20px' }}>
         Book a Room
       </Button>
-      {showBookingForm && <RoomBookingForm />}
+      {showBookingForm && <RoomBookingForm onBookingSubmit={refreshData}/>}
       {requests.length > 0 ? (
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>Room</TableCell>
               <TableCell>Event Title</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Time</TableCell>
+              <TableCell>Event Description</TableCell>
+              <TableCell>Start Date</TableCell>
+              <TableCell>End Date</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
@@ -50,8 +58,18 @@ const ClubDashboard = () => {
               <TableRow key={request.id}>
                 <TableCell>{request.room}</TableCell>
                 <TableCell>{request.eventTitle}</TableCell>
-                <TableCell>{request.selectedDate}</TableCell>
-                <TableCell>{request.selectedTime}</TableCell>
+                <TableCell>
+                  <div style={{ 
+                    maxHeight: '100px', 
+                    wordWrap: 'break-word',
+                    width: '200px',
+                    whiteSpace: 'normal'
+                  }}>
+                    {request.eventDescription}
+                  </div>
+                </TableCell>
+                <TableCell>{new Date(request.startDateTime.seconds * 1000).toLocaleString()}</TableCell>
+                <TableCell>{new Date(request.endDateTime.seconds * 1000).toLocaleString()}</TableCell>
                 <TableCell>{request.status || "Pending"}</TableCell>
               </TableRow>
             ))}

@@ -4,32 +4,33 @@ import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@m
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 
-const RoomBookingForm = () => {
+const RoomBookingForm = ({ onBookingSubmit }) => {
   const [room, setRoom] = useState("");
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [startDateTime, setStartDateTime] = useState(null);
   const [endDateTime, setEndDateTime] = useState(null);
+  const userEmail = auth.currentUser?.email || "";
 
   const handleSubmit = async () => {
     const bookingData = {
+      userEmail,
       room,
       eventTitle,
       eventDescription,
       startDateTime: Timestamp.fromDate(new Date(startDateTime)),
       endDateTime: Timestamp.fromDate(new Date(endDateTime)),
     };
-    console.log(startDateTime);
-    console.log(endDateTime);
     try {
       await addDoc(collection(db, "bookings"), bookingData);
       alert("Booking request sent!");
     } catch (error) {
       console.error("Error adding booking: ", error);
     }
+    onBookingSubmit();
   };
 
   return (
