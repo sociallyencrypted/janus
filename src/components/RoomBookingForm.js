@@ -6,6 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { auth, db } from "../firebase";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
+import rooms from "../rooms.json";
 
 const RoomBookingForm = ({ onBookingSubmit }) => {
   const [room, setRoom] = useState("");
@@ -39,8 +40,11 @@ const RoomBookingForm = ({ onBookingSubmit }) => {
       <FormControl fullWidth>
         <InputLabel>Select Room</InputLabel>
         <Select value={room} onChange={(e) => setRoom(e.target.value)}>
-          <MenuItem value="Room 101">Room 101</MenuItem>
-          <MenuItem value="Room 102">Room 102</MenuItem>
+          {rooms.map((room) => (
+            <MenuItem key={room.id} value={room.id}>
+              {room.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 

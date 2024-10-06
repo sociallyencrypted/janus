@@ -4,6 +4,7 @@ import { Container, Table, TableBody, TableCell, TableHead, TableRow, Typography
 import { auth, db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import RoomBookingForm from "./RoomBookingForm";
+import rooms from "../rooms.json";
 
 const ClubDashboard = () => {
   const [requests, setRequests] = useState([]);
@@ -56,7 +57,7 @@ const ClubDashboard = () => {
           <TableBody>
             {requests.map((request) => (
               <TableRow key={request.id}>
-                <TableCell>{request.room}</TableCell>
+                <TableCell>{rooms.find(room => room.id === request.room)?.name || request.room}</TableCell>
                 <TableCell>{request.eventTitle}</TableCell>
                 <TableCell>
                   <div style={{ 
