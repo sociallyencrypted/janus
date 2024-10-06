@@ -6,11 +6,13 @@ import Home from "./components/Home";
 import ClubDashboard from "./components/ClubDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import Login from "./components/Login";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <ThemeContextProvider>
       <Router>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
